@@ -419,6 +419,30 @@ pre.ccode {
   opacity: .85;
 }
 
+/* Comparison mode — one style across every background */
+.is-hidden { display: none !important; }
+.compare {
+  display: none;
+  gap: var(--s-2);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.compare.show { display: grid; }
+.cmp-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg);
+  color: var(--fg);
+}
+.cmp-tag { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; opacity: .5; }
+.cmp-head { font-size: 16px !important; margin: 0 !important; line-height: 1.15; }
+.cmp-icons { display: flex; gap: var(--s-2); }
+.cmp-card .lic { font-size: 20px; }
+.cmp-card .btn { width: 100%; padding: 8px 14px; font-size: 12px; }
+
 /* ============================================================
    GOLD / SILVER SHOWCASE
    Shared base: the clip boilerplate lives here once, so each
@@ -522,13 +546,26 @@ pre.ccode {
 .gs-moon .bdf.gold-bdf { background: rgba(136, 168, 200, .12); color: #B0C8E0; border: 1px solid rgba(136, 168, 200, .28); }
 .gs-moon .gold-btn     { background: linear-gradient(135deg, #3A5070, #6880A0, #A8C0D8, #C0D8EE, #88A8C8, #4A6080); color: #0A1828; filter: drop-shadow(0 0 10px rgba(150, 190, 230, .4)); }
 
-/* 15 · INK — for parchment (dark) */
+/* 15 · ROSE GOLD — for Venus / Love / relationship spreads */
+.gs-rose .gold-text { background: linear-gradient(155deg, #FFE2D8 0%, #F2BCA8 20%, #DE9580 40%, #E8B488 56%, #CC7E68 78%, #F4C6B4 100%); }
+.gs-rose .bdo.gold-bdg { color: #DE9580; -webkit-text-fill-color: #DE9580; border-color: rgba(222, 149, 128, .45); }
+.gs-rose .bdf.gold-bdf { background: linear-gradient(135deg, #B0584A, #DE9580, #E8B488); color: #2A0E08; }
+.gs-rose .gold-btn     { background: linear-gradient(135deg, #A04C3E, #DE9580 45%, #F4C6A8 70%, #CC7E68); color: #2A0E08; }
+
+/* 16 · VERDIGRIS — patina for Nature / Wheel of the Year / Pentacles */
+@keyframes patina { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.gs-verdigris .gold-text { background: linear-gradient(155deg, #173A2A 0%, #2E6B4A 18%, #5AA078 32%, #C9A84C 45%, #4A9472 58%, #8AC8A2 72%, #2E6B4A 88%, #123022 100%); background-size: 220% 220%; animation: patina 7s ease-in-out infinite; filter: drop-shadow(0 0 8px rgba(70, 150, 110, .5)); }
+.gs-verdigris .bdo.gold-bdg { color: #5AA078; -webkit-text-fill-color: #5AA078; border-color: rgba(90, 160, 120, .45); }
+.gs-verdigris .bdf.gold-bdf { background: linear-gradient(135deg, #173A2A, #2E6B4A, #5AA078); color: #E2F2E8; }
+.gs-verdigris .gold-btn     { background: linear-gradient(135deg, #123022, #2E6B4A, #5AA078, #C9A84C, #2E6B4A, #163828); background-size: 220% 220%; color: #E2F2E8; animation: patina 7s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(70, 150, 110, .45)); }
+
+/* 17 · INK — for parchment (dark) */
 .gs-ink .gold-text { background: linear-gradient(155deg, #0E0702 0%, #281208 22%, #120803 40%, #201008 60%, #0E0702 78%, #1A0A05 95%); }
 .gs-ink .bdo.gold-bdg { color: #201008; -webkit-text-fill-color: #201008; border-color: rgba(32, 16, 8, .44); }
 .gs-ink .bdf.gold-bdf { background: rgba(32, 16, 8, .1); color: #201008; border: 1px solid rgba(32, 16, 8, .27); }
 .gs-ink .gold-btn     { background: linear-gradient(135deg, #0E0702, #281208 50%, #0E0702); color: #F2E8D5; border: 1px solid rgba(40, 18, 8, .5); }
 
-/* 16 · VERMEIL — wine + gold (parchment) */
+/* 18 · VERMEIL — wine + gold (parchment) */
 @keyframes vermeil { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 .gs-vermeil .gold-text { background: linear-gradient(135deg, #5A1008 0%, #C02020 18%, #E09030 32%, #C9A84C 45%, #E09030 58%, #A81818 72%, #FFD870 82%, #881010 100%); background-size: 300% 300%; animation: vermeil 6s ease-in-out infinite; }
 .gs-vermeil .bdo.gold-bdg { background: linear-gradient(135deg, #5A1008, #C9A84C, #5A1008); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; border-color: #A01818; animation: vermeil 6s ease-in-out infinite; }
@@ -536,11 +573,11 @@ pre.ccode {
 .gs-vermeil .gold-btn     { background: linear-gradient(135deg, #3A0808, #8B1418, #C02020, #E09030, #C9A84C, #6A0A10); background-size: 300% 300%; color: #FFE0C0; animation: vermeil 6s ease-in-out infinite; }
 
 /* ---------- Parchment contrast fixes for bright styles ---------- */
-body[data-theme="parchment"] .gs-luxe .gold-text    { background: linear-gradient(155deg, #5A3808 0%, #9B6E2A 30%, #C9A84C 55%, #4A2E05 80%, #8B5C1C 100%); }
-body[data-theme="parchment"] .gs-shimmer .gold-text { background: linear-gradient(90deg, #3A2005 0%, #3A2005 15%, #9B6E2A 25%, #C9A84C 40%, #C9A84C 45%, #9B6E2A 55%, #3A2005 70%, #3A2005 100%); background-size: 200% auto; }
-body[data-theme="parchment"] .gs-glow .gold-text    { background: linear-gradient(155deg, #5A3808 0%, #9B6E2A 40%, #C9A84C 100%); filter: drop-shadow(0 0 6px rgba(80, 50, 8, .7)) drop-shadow(0 0 16px rgba(80, 50, 8, .35)); }
-body[data-theme="parchment"] .gs-glow .gold-btn     { background: rgba(130, 85, 10, .1); color: #7A5010; border-color: rgba(130, 85, 10, .42); box-shadow: 0 0 12px rgba(130, 85, 10, .28); }
-body[data-theme="parchment"] .gs-pearl .gold-text   { background: linear-gradient(140deg, #484048 0%, #888090 20%, #686068 35%, #484048 50%, #787080 65%, #585460 80%, #3A3848 100%); background-size: 200% 200%; filter: drop-shadow(0 0 4px rgba(60, 55, 65, .5)); }
+[data-theme="parchment"] .gs-luxe .gold-text    { background: linear-gradient(155deg, #5A3808 0%, #9B6E2A 30%, #C9A84C 55%, #4A2E05 80%, #8B5C1C 100%); }
+[data-theme="parchment"] .gs-shimmer .gold-text { background: linear-gradient(90deg, #3A2005 0%, #3A2005 15%, #9B6E2A 25%, #C9A84C 40%, #C9A84C 45%, #9B6E2A 55%, #3A2005 70%, #3A2005 100%); background-size: 200% auto; }
+[data-theme="parchment"] .gs-glow .gold-text    { background: linear-gradient(155deg, #5A3808 0%, #9B6E2A 40%, #C9A84C 100%); filter: drop-shadow(0 0 6px rgba(80, 50, 8, .7)) drop-shadow(0 0 16px rgba(80, 50, 8, .35)); }
+[data-theme="parchment"] .gs-glow .gold-btn     { background: rgba(130, 85, 10, .1); color: #7A5010; border-color: rgba(130, 85, 10, .42); box-shadow: 0 0 12px rgba(130, 85, 10, .28); }
+[data-theme="parchment"] .gs-pearl .gold-text   { background: linear-gradient(140deg, #484048 0%, #888090 20%, #686068 35%, #484048 50%, #787080 65%, #585460 80%, #3A3848 100%); background-size: 200% 200%; filter: drop-shadow(0 0 4px rgba(60, 55, 65, .5)); }
 </style>
 </head>
 
@@ -564,6 +601,9 @@ body[data-theme="parchment"] .gs-pearl .gold-text   { background: linear-gradien
     <button class="cbtn" id="motionToggle" aria-pressed="true">
       <span aria-hidden="true">◐</span> Анимация
     </button>
+    <button class="cbtn" id="compareToggle" aria-pressed="false">
+      <span aria-hidden="true">▦</span> Сравнить фоны
+    </button>
   </div>
 </header>
 
@@ -582,7 +622,7 @@ body[data-theme="parchment"] .gs-pearl .gold-text   { background: linear-gradien
     </div>
 
     <div class="ss-group">
-      <p class="sstitle">Новые темы <span class="tag tag-new">4 новых</span></p>
+      <p class="sstitle">Новые темы <span class="tag tag-new">6 новых</span></p>
       <div class="sgrid" id="g-new"></div>
     </div>
 
@@ -644,6 +684,8 @@ body[data-theme="parchment"] .gs-pearl .gold-text   { background: linear-gradien
       </div>
     </div>
 
+    <div class="compare" id="compare" aria-label="Стиль на разных фонах"></div>
+
     <div class="cpanel">
       <div class="chdr">
         <span class="cttl">CSS — <span id="sname">Luxe Gradient</span></span>
@@ -679,6 +721,8 @@ const STYLES = [
   { id:'fire',     group:'new',   ru:'Огонь',    en:'Sacred Fire',  icon:'🔥', anim:true,  use:'Ритуалы, Колесо года', hint:'Ритуалы' },
   { id:'amethyst', group:'new',   ru:'Аметист',  en:'Amethyst',     icon:'🔮', anim:true,  use:'Каббала, Оракул', hint:'Каббала · Оракул' },
   { id:'moon',     group:'new',   ru:'Луна',     en:'Moon Dew',     icon:'🌙', anim:true,  use:'Лунный календарь, Астрология', hint:'Лунный кал.' },
+  { id:'rose',     group:'new',   ru:'Роза',     en:'Rose Gold',    icon:'🌹', anim:false, use:'Венера, Любовь, Таро отношений', hint:'Венера · Любовь' },
+  { id:'verdigris',group:'new',   ru:'Патина',   en:'Verdigris',    icon:'🌿', anim:true,  use:'Природа, Колесо года, Пентакли', hint:'Земля · Природа' },
 
   // Parchment
   { id:'ink',      group:'parch', ru:'Чернила',  en:'Ink',          icon:'✒', anim:false, use:'Пергамент — основной текст', hint:'📜 только пергамент', parchOnly:true },
@@ -897,6 +941,34 @@ moon:`/* 🌙 Moon Dew — для Луна · Астрология */
   animation: moonFlow 7s ease-in-out infinite;
   filter: drop-shadow(0 0 8px rgba(150,190,230,.55));
 }`,
+rose:`/* 🌹 Rose Gold — розовое золото */
+.gold-text {
+  background: linear-gradient(155deg,
+    #FFE2D8 0%, #F2BCA8 20%, #DE9580 40%,
+    #E8B488 56%, #CC7E68 78%, #F4C6B4 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}`,
+verdigris:`/* 🌿 Verdigris — патина (Природа · Пентакли) */
+@keyframes patina {
+  0%,100% { background-position: 0%   50%; }
+  50%     { background-position: 100% 50%; }
+}
+.gold-text {
+  background: linear-gradient(155deg,
+    #173A2A 0%, #2E6B4A 18%, #5AA078 32%,
+    #C9A84C 45%, #4A9472 58%, #8AC8A2 72%,
+    #2E6B4A 88%, #123022 100%
+  );
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: patina 7s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(70,150,110,.5));
+}`,
 ink:`/* ✒ Ink — чернила (для пергамента) */
 .gold-text {
   background: linear-gradient(155deg,
@@ -938,7 +1010,7 @@ vermeil:`/* 📜 Вермель — вино+золото (пергамент) *
    ============================================================ */
 const STORE = 'septagram.v3';
 const state = Object.assign(
-  { theme:'dark', motion:'on', style:'luxe', text:'Кетер · Сефирот' },
+  { theme:'dark', motion:'on', style:'luxe', text:'Кетер · Сефирот', compare:false },
   load()
 );
 
@@ -993,6 +1065,24 @@ buildGrid('#g-new',   'new');
 buildGrid('#g-parch', 'parch');
 cards = [...document.querySelectorAll('.scard')];
 
+/* ---------- Build the comparison cards (one per background) ---------- */
+const CMP_THEMES = [['dark', 'Тёмный'], ['parchment', 'Пергамент'], ['graphite', 'Графит']];
+const compareEl = $('#compare');
+compareEl.innerHTML = CMP_THEMES.map(([t, label]) => `
+  <div class="cmp-card gs-luxe" data-theme="${t}">
+    <span class="cmp-tag">${label}</span>
+    <div class="cmp-head h2el gold-text"></div>
+    <div class="cmp-icons">
+      <span class="lic gold-text">✦</span>
+      <span class="lic gold-text">☽</span>
+      <span class="lic gold-text">◉</span>
+    </div>
+    <div><span class="bdf gold-bdf">✦ Карма</span></div>
+    <button class="btn gold-btn">Открыть ✦</button>
+  </div>`).join('');
+const cmpCards = [...compareEl.querySelectorAll('.cmp-card')];
+const cmpHeads = [...compareEl.querySelectorAll('.cmp-head')];
+
 /* ---------- Keyboard grid navigation ---------- */
 function handleArrow(e, el) {
   const visible = cards.filter(c => !c.classList.contains('hidden'));
@@ -1012,8 +1102,9 @@ function select(id) {
   if (!s) return;
   state.style = id;
 
-  // Swap the gs-* class on the preview, keep everything else
+  // Swap the gs-* class on the preview (and every comparison card), keep the rest
   preview.className = preview.className.replace(/\bgs-\S+/g, '').trim() + ' gs-' + id;
+  cmpCards.forEach(c => { c.className = c.className.replace(/\bgs-\S+/g, '').trim() + ' gs-' + id; });
 
   // Card selected state
   cards.forEach(c => {
@@ -1067,6 +1158,21 @@ function setMotion(on) {
   save();
 }
 
+function setCompare(on) {
+  state.compare = on;
+  $('#preview').classList.toggle('is-hidden', on);
+  compareEl.classList.toggle('show', on);
+  $('#compareToggle').setAttribute('aria-pressed', String(on));
+  save();
+}
+
+function setText(value) {
+  state.text = value || ' ';
+  $('#previewHead').textContent = state.text;
+  cmpHeads.forEach(h => { h.textContent = state.text; });
+  save();
+}
+
 function filter(query) {
   const q = query.trim().toLowerCase();
   let shown = 0;
@@ -1086,13 +1192,11 @@ $('#themeSwitch').addEventListener('click', e => {
 
 $('#motionToggle').addEventListener('click', () => setMotion(state.motion === 'off'));
 
+$('#compareToggle').addEventListener('click', () => setCompare(!state.compare));
+
 $('#search').addEventListener('input', e => filter(e.target.value));
 
-$('#txtInput').addEventListener('input', e => {
-  state.text = e.target.value || ' ';
-  $('#previewHead').textContent = state.text;
-  save();
-});
+$('#txtInput').addEventListener('input', e => setText(e.target.value));
 
 $('#copybtn').addEventListener('click', async () => {
   const code = $('#ccode').textContent;
@@ -1118,9 +1222,10 @@ $('#copybtn').addEventListener('click', async () => {
   setTheme(state.theme);
   setMotion(state.motion === 'on');
   $('#txtInput').value = state.text;
-  $('#previewHead').textContent = state.text;
+  setText(state.text);
   filter('');
   select(byId(state.style) ? state.style : 'luxe');
+  setCompare(state.compare === true);
 })();
 </script>
 </body>
