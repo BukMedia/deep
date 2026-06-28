@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark" data-motion="on">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark light">
+<title>Septagram · Каталог золотых и серебряных стилей</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* Brass accent — used only for the tool chrome, never the swatches */
+  --brass:        #C9A84C;
+  --brass-soft:   #CE9E7A;
+  --brass-line:   rgba(206, 158, 122, .30);
+  --brass-faint:  rgba(206, 158, 122, .10);
+  --brass-wash:   rgba(206, 158, 122, .07);
+
+  /* Spacing — 4px base scale */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px;
+  --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px;
+
+  /* Radius — one consistent system */
+  --r-sm:  8px;
+  --r-md:  12px;
+  --r-lg:  18px;
+  --r-pill: 100px;
+
+  /* Type */
+  --font-body:    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Fraunces', 'Hoefler Text', Georgia, serif;
+  --font-mono:    'SFMono-Regular', ui-monospace, Consolas, monospace;
+
+  /* Motion */
+  --ease: cubic-bezier(.2, .7, .3, 1);
+  --dur:  .2s;
+}
+
+/* ============================================================
+   THEMES — every surface reads from these tokens
+   ============================================================ */
+[data-theme="dark"] {
+  --bg:        #0C1519;
+  --fg:        #F4F1EA;
+  --surface:   rgba(22, 33, 39, .82);
+  --surface-2: rgba(22, 33, 39, .94);
+  --line:      rgba(206, 158, 122, .12);
+  --note-bg:   rgba(160, 110, 50, .10);
+  --note-line: rgba(160, 110, 50, .22);
+  --note-fg:   #C9A070;
+}
+[data-theme="parchment"] {
+  --bg:        #EDE0C8;
+  --fg:        #2A1A0E;
+  --surface:   rgba(242, 232, 213, .90);
+  --surface-2: rgba(237, 224, 200, .96);
+  --line:      rgba(42, 26, 14, .14);
+  --note-bg:   rgba(42, 26, 14, .07);
+  --note-line: rgba(42, 26, 14, .18);
+  --note-fg:   #6A4010;
+}
+[data-theme="graphite"] {
+  --bg:        #1C1C1E;
+  --fg:        #F4F1EA;
+  --surface:   rgba(44, 44, 46, .88);
+  --surface-2: rgba(44, 44, 46, .96);
+  --line:      rgba(206, 158, 122, .14);
+  --note-bg:   rgba(160, 110, 50, .10);
+  --note-line: rgba(160, 110, 50, .22);
+  --note-fg:   #C9A070;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+  padding-bottom: var(--s-7);
+  transition: background var(--dur), color var(--dur);
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input { font: inherit; color: inherit; }
+
+/* Visible keyboard focus everywhere (skill: never bare outline:none) */
+:where(button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Tactile press on every control */
+.cbtn:active, .copybtn:active, .btn:active, .scard:active { transform: scale(.97); }
+
+/* Respect the user's motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .001ms !important; }
+  .gold-text, .gold-bdg, .gold-bdf, .gold-btn { animation: none !important; }
+}
+/* Manual pause toggle */
+[data-motion="off"] .gold-text,
+[data-motion="off"] .gold-bdg,
+[data-motion="off"] .gold-bdf,
+[data-motion="off"] .gold-btn { animation-play-state: paused !important; }
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.topbar {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: var(--s-6) var(--s-4) var(--s-4);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: var(--s-3); }
+.brand-mark {
+  font-size: 28px;
+  line-height: 1;
+  color: var(--brass);
+  filter: drop-shadow(0 0 12px rgba(201, 168, 76, .35));
+}
+.brand-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: .005em;
+  line-height: 1;
+}
+.brand-sub { font-size: 12.5px; opacity: .55; margin-top: 4px; }
+
+.toolbar { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+
+/* Segmented control (theme switch) */
+.seg {
+  display: inline-flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+}
+.seg button {
+  padding: 6px 14px;
+  min-height: 32px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: .7;
+  transition: background var(--dur), color var(--dur), opacity var(--dur);
+}
+.seg button:hover { opacity: 1; background: var(--brass-wash); }
+.seg button[aria-pressed="true"] {
+  background: rgba(206, 158, 122, .16);
+  color: var(--brass-soft);
+  opacity: 1;
+}
+
+/* Generic chrome button (motion toggle) */
+.cbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  min-height: 38px;
+  border: 1px solid var(--brass-line);
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background var(--dur), border-color var(--dur), transform .12s;
+}
+.cbtn:hover { background: var(--brass-wash); }
+.cbtn[aria-pressed="false"] { opacity: .55; }
+
+/* ============================================================
+   APP SHELL — catalog (left) + sticky stage (right)
+   ============================================================ */
+.shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 var(--s-4);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-5);
+}
+@media (min-width: 940px) {
+  .shell { grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr); }
+}
+
+/* ---------- Catalog ---------- */
+.catalog-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-bottom: var(--s-4);
+  flex-wrap: wrap;
+}
+.search {
+  flex: 1;
+  min-width: 160px;
+  padding: 9px 14px;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  font-size: 13px;
+}
+.search::placeholder { opacity: .4; }
+.count { font-size: 11px; opacity: .45; white-space: nowrap; }
+
+.ss-group { margin-bottom: var(--s-5); }
+.sstitle {
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  opacity: .42;
+  margin-bottom: var(--s-3);
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+.tag {
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  letter-spacing: .02em;
+  text-transform: none;
+}
+.tag-new   { background: rgba(201, 168, 76, .14); color: var(--brass);     border: 1px solid rgba(201, 168, 76, .30); }
+.tag-parch { background: rgba(160, 110, 50, .12); color: #B87840;          border: 1px solid rgba(160, 110, 50, .25); }
+
+.sgrid {
+  display: grid;
+  gap: var(--s-2);
+  grid-template-columns: repeat(auto-fill, minmax(94px, 1fr));
+}
+
+/* ---------- Swatch card ---------- */
+.scard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: var(--s-2) var(--s-2) 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color var(--dur), box-shadow var(--dur), transform .12s;
+}
+.scard:hover { border-color: var(--brass-line); }
+.scard.on {
+  border-color: var(--brass);
+  box-shadow: 0 0 0 1px rgba(201, 168, 76, .22);
+}
+.scard.pt.on {
+  border-color: #B87840;
+  box-shadow: 0 0 0 1px rgba(184, 120, 64, .22);
+}
+.sprev {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+}
+.sname { font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ssub  { font-size: 9.5px; opacity: .4; }
+.shint { font-size: 8.5px; opacity: .5; margin-top: 1px; line-height: 1.35; }
+.atag {
+  position: absolute;
+  top: 7px; right: 7px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--brass);
+  animation: blink 1.6s ease-in-out infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
+.scard.hidden { display: none; }
+
+/* ============================================================
+   STAGE — sticky preview + meta + CSS
+   ============================================================ */
+.stage { display: flex; flex-direction: column; gap: var(--s-3); }
+@media (min-width: 940px) {
+  .stage { position: sticky; top: var(--s-4); align-self: start; }
+}
+
+/* Selected-style meta header */
+.meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+.meta-name { font-family: var(--font-display); font-size: 20px; font-weight: 500; }
+.meta-en   { font-size: 12px; opacity: .45; }
+.meta-use  { width: 100%; font-size: 11.5px; opacity: .55; margin-top: -2px; }
+
+/* Contrast note */
+.cnote {
+  font-size: 11.5px;
+  line-height: 1.45;
+  padding: 8px 13px;
+  border-radius: var(--r-sm);
+  background: var(--note-bg);
+  border: 1px solid var(--note-line);
+  color: var(--note-fg);
+  display: none;
+}
+.cnote.show { display: block; }
+
+/* Editable preview text */
+.txt-field { display: flex; align-items: center; gap: var(--s-2); }
+.txt-label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; opacity: .35; white-space: nowrap; }
+.txt-input {
+  flex: 1;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  font-size: 13px;
+}
+
+/* Preview card */
+.pcard {
+  padding: var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.pblk { margin-bottom: var(--s-5); }
+.pblk:last-child { margin-bottom: 0; }
+.plbl {
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  opacity: .3;
+  margin-bottom: var(--s-3);
+}
+.divider { height: 1px; background: var(--line); margin: var(--s-4) 0; }
+
+/* Preview text elements */
+.h1el  { font-family: var(--font-display); font-size: 30px; font-weight: 500; letter-spacing: -.01em; line-height: 1.12; display: inline-block; }
+.h2el  { font-size: 18px; font-weight: 500; margin-top: 6px; display: inline-block; }
+.capel { font-size: 11px; letter-spacing: .06em; margin-top: 4px; display: inline-block; opacity: .9; }
+
+.irow { display: flex; gap: var(--s-4); align-items: center; flex-wrap: wrap; }
+.lic   { font-size: 32px; line-height: 1; display: inline-block; }
+.licsm { font-size: 19px; line-height: 1; display: inline-block; }
+
+.brow { display: flex; gap: var(--s-2); flex-wrap: wrap; align-items: center; }
+.bdo {
+  display: inline-flex; align-items: center;
+  padding: 3px 12px;
+  border-radius: var(--r-pill);
+  font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  border: 1px solid;
+}
+.bdf {
+  display: inline-flex; align-items: center;
+  padding: 3px 12px;
+  border-radius: var(--r-pill);
+  font-size: 10px; font-weight: 700; letter-spacing: .08em;
+}
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 12px 28px;
+  border-radius: var(--r-sm);
+  font-weight: 600; font-size: 14px; letter-spacing: .04em;
+  border: none;
+  cursor: pointer;
+  transition: filter var(--dur), transform .12s;
+}
+.btn:hover { filter: brightness(1.1); }
+
+/* CSS panel */
+.cpanel {
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+.chdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-2); }
+.cttl { font-size: 9px; letter-spacing: .15em; text-transform: uppercase; opacity: .35; }
+.copybtn {
+  padding: 4px 12px;
+  border: 1px solid var(--brass-line);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--brass-soft);
+  font-size: 11px;
+  cursor: pointer;
+  transition: background var(--dur), transform .12s;
+}
+.copybtn:hover { background: var(--brass-wash); }
+pre.ccode {
+  font: 10.5px/1.65 var(--font-mono);
+  overflow-x: auto;
+  white-space: pre;
+  opacity: .85;
+}
+
+/* Comparison mode — one style across every background */
+.is-hidden { display: none !important; }
+.compare {
+  display: none;
+  gap: var(--s-2);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.compare.show { display: grid; }
+.cmp-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg);
+  color: var(--fg);
+}
+.cmp-tag { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; opacity: .5; }
+.cmp-head { font-size: 16px !important; margin: 0 !important; line-height: 1.15; }
+.cmp-icons { display: flex; gap: var(--s-2); }
+.cmp-card .lic { font-size: 20px; }
+.cmp-card .btn { width: 100%; padding: 8px 14px; font-size: 12px; }
+
+/* ============================================================
+   GOLD / SILVER SHOWCASE
+   Shared base: the clip boilerplate lives here once, so each
+   style only declares its own background / filter / animation.
+   ============================================================ */
+.gold-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* 1 · LUXE — classic gradient */
+.gs-luxe .gold-text { background: linear-gradient(155deg, #FFE9A0 0%, #E8C76A 25%, #C9A84C 50%, #9B6E2A 75%, #CE9E7A 100%); }
+.gs-luxe .bdo.gold-bdg { background: linear-gradient(135deg, #FFE9A0, #C9A84C); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; border-color: #C9A84C; }
+.gs-luxe .bdf.gold-bdf { background: linear-gradient(135deg, #9B6E2A, #C9A84C, #E8C76A); color: #1A0E00; }
+.gs-luxe .gold-btn     { background: linear-gradient(135deg, #9B6E2A 0%, #C9A84C 40%, #E8C76A 70%, #C9A84C 100%); color: #1A0E00; }
+
+/* 2 · DUST — matte brass */
+.gs-dust .gold-text { background: linear-gradient(148deg, #CE9E7A 0%, #B8844A 6%, #D0A85A 11%, #C9A84C 17%, #B0783A 22%, #D0A85A 28%, #CE9E7A 35%, #C2944A 42%, #B8844A 48%, #D0A85A 54%, #CE9E7A 61%, #C9A84C 68%, #B47840 74%, #CE9E7A 81%, #B8844A 100%); }
+.gs-dust .bdo.gold-bdg { color: #CE9E7A; -webkit-text-fill-color: #CE9E7A; border-color: rgba(206, 158, 122, .42); }
+.gs-dust .bdf.gold-bdf { background: rgba(206, 158, 122, .11); color: #CE9E7A; border: 1px solid rgba(206, 158, 122, .26); }
+.gs-dust .gold-btn     { background: rgba(206, 158, 122, .09); border: 1px solid rgba(206, 158, 122, .32); color: #CE9E7A; }
+
+/* 3 · PAINT — oil stroke */
+.gs-paint .gold-text { background: linear-gradient(145deg, #4A2E0A 0%, #9B6E2A 12%, #FFE9A0 28%, #C9A84C 42%, #6B4B1E 52%, #E8C76A 63%, #9B6E2A 73%, #FFE9A0 82%, #6B4B1E 100%); }
+.gs-paint .bdo.gold-bdg { background: linear-gradient(135deg, #4A2E0A, #FFE9A0, #4A2E0A); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; border-color: #9B6E2A; }
+.gs-paint .bdf.gold-bdf { background: linear-gradient(135deg, #3A1A00, #C9A84C 50%, #3A1A00); color: #FFE9A0; }
+.gs-paint .gold-btn     { background: linear-gradient(135deg, #2A1A00, #6B4B1E 25%, #C9A84C 50%, #FFE9A0 65%, #C9A84C 80%, #2A1A00); color: #1A0E00; font-weight: 700; }
+
+/* 4 · SHIMMER — animated sweep */
+@keyframes shim { from { background-position: -200% center; } to { background-position: 200% center; } }
+.gs-shimmer .gold-text { background: linear-gradient(90deg, #9B6E2A 0%, #9B6E2A 15%, #C9A84C 25%, #FFE9A0 40%, #FFE9A0 45%, #C9A84C 55%, #9B6E2A 70%, #9B6E2A 100%); background-size: 200% auto; animation: shim 2.5s linear infinite; }
+.gs-shimmer .bdo.gold-bdg { background: linear-gradient(90deg, #9B6E2A, #FFE9A0, #C9A84C, #9B6E2A); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; border-color: #C9A84C; animation: shim 2.5s linear infinite; }
+.gs-shimmer .bdf.gold-bdf { background: linear-gradient(90deg, #9B6E2A, #C9A84C, #FFE9A0, #C9A84C, #9B6E2A); background-size: 200% auto; color: #1A0E00; animation: shim 2.5s linear infinite; }
+.gs-shimmer .gold-btn     { background: linear-gradient(90deg, #4A2E0A, #9B6E2A, #C9A84C, #FFE9A0, #C9A84C, #9B6E2A, #4A2E0A); background-size: 200% auto; color: #1A0E00; animation: shim 2s linear infinite; }
+
+/* 5 · GLOW — drop-shadow halo */
+.gs-glow .gold-text { background: linear-gradient(155deg, #FFE9A0 0%, #C9A84C 40%, #CE9E7A 100%); filter: drop-shadow(0 0 10px rgba(201, 168, 76, .9)) drop-shadow(0 0 28px rgba(201, 168, 76, .45)); }
+.gs-glow .bdo.gold-bdg { color: #C9A84C; -webkit-text-fill-color: #C9A84C; border-color: #C9A84C; box-shadow: 0 0 10px rgba(201, 168, 76, .28), inset 0 0 10px rgba(201, 168, 76, .05); }
+.gs-glow .bdf.gold-bdf { background: rgba(201, 168, 76, .1); color: #E8C76A; border: 1px solid rgba(201, 168, 76, .46); box-shadow: 0 0 14px rgba(201, 168, 76, .3); }
+.gs-glow .gold-btn     { background: rgba(201, 168, 76, .09); color: #E8C76A; border: 1px solid rgba(201, 168, 76, .43); box-shadow: 0 0 18px rgba(201, 168, 76, .32), 0 0 36px rgba(201, 168, 76, .13); }
+
+/* 6 · EMBOSS — 3D text-shadow (solid colour, no clip) */
+.gs-emboss .gold-text { color: #C9A84C; -webkit-text-fill-color: #C9A84C; text-shadow: 0 1px 2px rgba(255, 230, 120, .7), 0 -1px 1px rgba(50, 25, 0, .95), 1px 0 3px rgba(50, 25, 0, .4), -1px 0 3px rgba(255, 220, 100, .25), 0 3px 6px rgba(0, 0, 0, .65); }
+.gs-emboss .bdo.gold-bdg { color: #C9A84C; -webkit-text-fill-color: #C9A84C; border-color: #9B6E2A; text-shadow: 0 1px 1px rgba(255, 220, 100, .5), 0 -1px 1px rgba(50, 25, 0, .9); box-shadow: 0 2px 4px rgba(0, 0, 0, .4), inset 0 1px 2px rgba(255, 220, 100, .12), inset 0 -1px 2px rgba(0, 0, 0, .3); }
+.gs-emboss .bdf.gold-bdf { background: linear-gradient(180deg, #D0AA50, #9B6E2A); color: #FFE9A0; box-shadow: 0 2px 5px rgba(0, 0, 0, .5), inset 0 1px 3px rgba(255, 220, 100, .28), inset 0 -1px 3px rgba(0, 0, 0, .4); }
+.gs-emboss .gold-btn     { background: linear-gradient(180deg, #D4A850, #9B6E2A 55%, #C9A84C); color: #FFE9A0; box-shadow: 0 4px 8px rgba(0, 0, 0, .55), inset 0 1px 4px rgba(255, 220, 100, .28), inset 0 -2px 4px rgba(0, 0, 0, .45); text-shadow: 0 1px 2px rgba(0, 0, 0, .5); }
+
+/* 7 · FOIL — drifting 300% canvas */
+@keyframes foil { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.gs-foil .gold-text { background: linear-gradient(135deg, #9B6E2A 0%, #FFE9A0 15%, #C9A84C 25%, #CE9E7A 35%, #FFE9A0 45%, #9B6E2A 55%, #E8C76A 65%, #CE9E7A 75%, #FFE9A0 85%, #9B6E2A 100%); background-size: 300% 300%; animation: foil 4s ease-in-out infinite; }
+.gs-foil .bdo.gold-bdg { background: linear-gradient(135deg, #9B6E2A, #FFE9A0, #C9A84C, #FFE9A0, #9B6E2A); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; border-color: #C9A84C; animation: foil 4s ease-in-out infinite; }
+.gs-foil .bdf.gold-bdf { background: linear-gradient(135deg, #9B6E2A, #E8C76A, #FFE9A0, #C9A84C, #9B6E2A); background-size: 300% 300%; color: #1A0E00; animation: foil 4s ease-in-out infinite; }
+.gs-foil .gold-btn     { background: linear-gradient(135deg, #4A2E0A, #C9A84C, #FFE9A0, #C9A84C, #9B6E2A, #FFE9A0, #4A2E0A); background-size: 300% 300%; color: #1A0E00; animation: foil 4s ease-in-out infinite; }
+
+/* 8 · ANTIQUE — aged brass */
+.gs-antique .gold-text { background: linear-gradient(155deg, #C8A870 0%, #B8924A 20%, #D4AA68 40%, #A87A38 60%, #C8A464 80%, #B07840 100%); }
+.gs-antique .bdo.gold-bdg { color: #B8924A; -webkit-text-fill-color: #B8924A; border-color: rgba(184, 146, 74, .43); }
+.gs-antique .bdf.gold-bdf { background: rgba(184, 146, 74, .1); color: #C8A870; border: 1px solid rgba(184, 146, 74, .23); }
+.gs-antique .gold-btn     { background: linear-gradient(135deg, #6A4A20, #B8924A, #D0AA60, #9B6E2A); color: #2A1A0A; }
+
+/* 9 · CHROME — silver chrome */
+.gs-chrome .gold-text { background: linear-gradient(155deg, #FFF 0%, #D8D8D8 15%, #808080 30%, #E0E0E0 45%, #F8F8F8 55%, #A0A0A0 70%, #D8D8D8 85%, #FFF 100%); }
+.gs-chrome .bdo.gold-bdg { background: linear-gradient(135deg, #606060, #E8E8E8, #B0B0B0); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; border-color: #B0B0B0; }
+.gs-chrome .bdf.gold-bdf { background: linear-gradient(135deg, #606060, #C0C0C0, #F0F0F0); color: #141414; }
+.gs-chrome .gold-btn     { background: linear-gradient(135deg, #3A3A3A, #909090, #E8E8E8, #B0B0B0, #606060); color: #141414; font-weight: 700; }
+
+/* 10 · PEARL — animated nacre */
+@keyframes pearl { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.gs-pearl .gold-text { background: linear-gradient(140deg, #FFF 0%, #EDE8E3 20%, #C8C4BE 35%, #FFF 50%, #E8E4E0 65%, #D0CCC8 80%, #FFF 100%); background-size: 200% 200%; animation: pearl 5s ease-in-out infinite; filter: drop-shadow(0 0 5px rgba(255, 255, 255, .35)); }
+.gs-pearl .bdo.gold-bdg { color: #D8D4D0; -webkit-text-fill-color: #D8D4D0; border-color: rgba(220, 216, 212, .43); }
+.gs-pearl .bdf.gold-bdf { background: linear-gradient(135deg, #787878, #C0C0C0, #F0EEE8, #C0BCBC, #787878); color: #141414; }
+.gs-pearl .gold-btn     { background: linear-gradient(135deg, #606060, #B0B0B0, #F0EEE8, #C0BCBC, #787878); color: #141414; box-shadow: 0 0 12px rgba(255, 255, 255, .08); }
+
+/* 11 · LIVING GOLD — diagonal flow */
+@keyframes liveGold { 0% { background-position: 0% 0%; } 33% { background-position: 100% 0%; } 66% { background-position: 100% 100%; } 100% { background-position: 0% 0%; } }
+.gs-living .gold-text { background: linear-gradient(135deg, #4A2E0A 0%, #C9A84C 8%, #FFE9A0 17%, #E8C76A 25%, #6B4B1E 33%, #FFE9A0 42%, #9B6E2A 50%, #C9A84C 58%, #FFE9A0 67%, #9B6E2A 75%, #4A2E0A 83%, #E8C76A 92%, #4A2E0A 100%); background-size: 400% 400%; animation: liveGold 8s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(201, 168, 76, .7)); }
+.gs-living .bdo.gold-bdg { background: linear-gradient(90deg, #4A2E0A, #FFE9A0, #9B6E2A, #C9A84C); background-size: 400% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; border-color: #C9A84C; animation: liveGold 8s ease-in-out infinite; }
+.gs-living .bdf.gold-bdf { background: linear-gradient(135deg, #9B6E2A, #C9A84C, #FFE9A0, #C9A84C, #9B6E2A); background-size: 400% 400%; color: #1A0E00; animation: liveGold 8s ease-in-out infinite; }
+.gs-living .gold-btn     { background: linear-gradient(135deg, #4A2E0A, #9B6E2A, #FFE9A0, #C9A84C, #4A2E0A); background-size: 400% 400%; color: #1A0E00; animation: liveGold 8s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(201, 168, 76, .65)); }
+
+/* 12 · SACRED FIRE — for Rituals / Wheel of the Year */
+@keyframes fireFlicker { 0%, 100% { background-position: 0% 0%; } 40% { background-position: 100% 50%; } 70% { background-position: 50% 100%; } }
+.gs-fire .gold-text { background: linear-gradient(155deg, #3A0E02 0%, #8B3010 18%, #CC5814 32%, #E87A20 45%, #C9A84C 58%, #E87A20 70%, #CC5814 80%, #6B2208 95%, #3A0E02 100%); background-size: 200% 200%; animation: fireFlicker 3s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(220, 100, 20, .75)); }
+.gs-fire .bdo.gold-bdg { background: linear-gradient(135deg, #CC5814, #E87A20, #C9A84C); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; border-color: #E87A20; }
+.gs-fire .bdf.gold-bdf { background: linear-gradient(135deg, #6B2208, #CC5814, #E87A20); color: #FFE9A0; animation: fireFlicker 3s ease-in-out infinite; }
+.gs-fire .gold-btn     { background: linear-gradient(135deg, #3A0E02, #8B3010, #CC5814, #E87A20, #C9A84C); background-size: 200% 200%; color: #FFE0C0; animation: fireFlicker 3s ease-in-out infinite; filter: drop-shadow(0 0 12px rgba(220, 100, 20, .7)); }
+
+/* 13 · AMETHYST — for Kabbalah / Oracle */
+@keyframes amePulse { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.gs-amethyst .gold-text { background: linear-gradient(135deg, #28085A 0%, #5828A8 18%, #9060C0 30%, #C9A84C 42%, #7840B0 55%, #B068D0 68%, #C9A84C 78%, #481898 88%, #1A0438 100%); background-size: 300% 300%; animation: amePulse 5s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(140, 60, 200, .6)); }
+.gs-amethyst .bdo.gold-bdg { background: linear-gradient(135deg, #5828A8, #B068D0, #C9A84C); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; border-color: #9060C0; }
+.gs-amethyst .bdf.gold-bdf { background: linear-gradient(135deg, #28085A, #7840B0, #C9A84C); background-size: 300% 300%; color: #EDD8FF; animation: amePulse 5s ease-in-out infinite; }
+.gs-amethyst .gold-btn     { background: linear-gradient(135deg, #28085A, #5828A8, #9060C0, #C9A84C, #7840B0, #1A0438); background-size: 300% 300%; color: #EDD8FF; animation: amePulse 5s ease-in-out infinite; filter: drop-shadow(0 0 12px rgba(140, 60, 200, .55)); }
+
+/* 14 · MOON DEW — for Lunar calendar / Astrology */
+@keyframes moonFlow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.gs-moon .gold-text { background: linear-gradient(155deg, #5870A0 0%, #98B8D8 18%, #C8E0F4 32%, #80A0C8 48%, #B0D0EC 62%, #90B0D0 78%, #607898 100%); background-size: 200% 200%; animation: moonFlow 7s ease-in-out infinite; filter: drop-shadow(0 0 8px rgba(150, 190, 230, .55)); }
+.gs-moon .bdo.gold-bdg { color: #88A8C8; -webkit-text-fill-color: #88A8C8; border-color: rgba(136, 168, 200, .42); }
+.gs-moon .bdf.gold-bdf { background: rgba(136, 168, 200, .12); color: #B0C8E0; border: 1px solid rgba(136, 168, 200, .28); }
+.gs-moon .gold-btn     { background: linear-gradient(135deg, #3A5070, #6880A0, #A8C0D8, #C0D8EE, #88A8C8, #4A6080); color: #0A1828; filter: drop-shadow(0 0 10px rgba(150, 190, 230, .4)); }
+
+/* 15 · ROSE GOLD — for Venus / Love / relationship spreads */
+.gs-rose .gold-text { background: linear-gradient(155deg, #FFE2D8 0%, #F2BCA8 20%, #DE9580 40%, #E8B488 56%, #CC7E68 78%, #F4C6B4 100%); }
+.gs-rose .bdo.gold-bdg { color: #DE9580; -webkit-text-fill-color: #DE9580; border-color: rgba(222, 149, 128, .45); }
+.gs-rose .bdf.gold-bdf { background: linear-gradient(135deg, #B0584A, #DE9580, #E8B488); color: #2A0E08; }
+.gs-rose .gold-btn     { background: linear-gradient(135deg, #A04C3E, #DE9580 45%, #F4C6A8 70%, #CC7E68); color: #2A0E08; }
+
+/* 16 · VERDIGRIS — patina for Nature / Wheel of the Year / Pentacles */
+@keyframes patina { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.gs-verdigris .gold-text { background: linear-gradient(155deg, #173A2A 0%, #2E6B4A 18%, #5AA078 32%, #C9A84C 45%, #4A9472 58%, #8AC8A2 72%, #2E6B4A 88%, #123022 100%); background-size: 220% 220%; animation: patina 7s ease-in-out infinite; filter: drop-shadow(0 0 8px rgba(70, 150, 110, .5)); }
+.gs-verdigris .bdo.gold-bdg { color: #5AA078; -webkit-text-fill-color: #5AA078; border-color: rgba(90, 160, 120, .45); }
+.gs-verdigris .bdf.gold-bdf { background: linear-gradient(135deg, #173A2A, #2E6B4A, #5AA078); color: #E2F2E8; }
+.gs-verdigris .gold-btn     { background: linear-gradient(135deg, #123022, #2E6B4A, #5AA078, #C9A84C, #2E6B4A, #163828); background-size: 220% 220%; color: #E2F2E8; animation: patina 7s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(70, 150, 110, .45)); }
+
+/* 17 · INK — for parchment (dark) */
+.gs-ink .gold-text { background: linear-gradient(155deg, #0E0702 0%, #281208 22%, #120803 40%, #201008 60%, #0E0702 78%, #1A0A05 95%); }
+.gs-ink .bdo.gold-bdg { color: #201008; -webkit-text-fill-color: #201008; border-color: rgba(32, 16, 8, .44); }
+.gs-ink .bdf.gold-bdf { background: rgba(32, 16, 8, .1); color: #201008; border: 1px solid rgba(32, 16, 8, .27); }
+.gs-ink .gold-btn     { background: linear-gradient(135deg, #0E0702, #281208 50%, #0E0702); color: #F2E8D5; border: 1px solid rgba(40, 18, 8, .5); }
+
+/* 18 · VERMEIL — wine + gold (parchment) */
+@keyframes vermeil { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.gs-vermeil .gold-text { background: linear-gradient(135deg, #5A1008 0%, #C02020 18%, #E09030 32%, #C9A84C 45%, #E09030 58%, #A81818 72%, #FFD870 82%, #881010 100%); background-size: 300% 300%; animation: vermeil 6s ease-in-out infinite; }
+.gs-vermeil .bdo.gold-bdg { background: linear-gradient(135deg, #5A1008, #C9A84C, #5A1008); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; border-color: #A01818; animation: vermeil 6s ease-in-out infinite; }
+.gs-vermeil .bdf.gold-bdf { background: linear-gradient(135deg, #5A1008, #A81818, #E09030); color: #FFE0C0; animation: vermeil 6s ease-in-out infinite; }
+.gs-vermeil .gold-btn     { background: linear-gradient(135deg, #3A0808, #8B1418, #C02020, #E09030, #C9A84C, #6A0A10); background-size: 300% 300%; color: #FFE0C0; animation: vermeil 6s ease-in-out infinite; }
+
+/* ---------- Parchment contrast fixes for bright styles ---------- */
+[data-theme="parchment"] .gs-luxe .gold-text    { background: linear-gradient(155deg, #5A3808 0%, #9B6E2A 30%, #C9A84C 55%, #4A2E05 80%, #8B5C1C 100%); }
+[data-theme="parchment"] .gs-shimmer .gold-text { background: linear-gradient(90deg, #3A2005 0%, #3A2005 15%, #9B6E2A 25%, #C9A84C 40%, #C9A84C 45%, #9B6E2A 55%, #3A2005 70%, #3A2005 100%); background-size: 200% auto; }
+[data-theme="parchment"] .gs-glow .gold-text    { background: linear-gradient(155deg, #5A3808 0%, #9B6E2A 40%, #C9A84C 100%); filter: drop-shadow(0 0 6px rgba(80, 50, 8, .7)) drop-shadow(0 0 16px rgba(80, 50, 8, .35)); }
+[data-theme="parchment"] .gs-glow .gold-btn     { background: rgba(130, 85, 10, .1); color: #7A5010; border-color: rgba(130, 85, 10, .42); box-shadow: 0 0 12px rgba(130, 85, 10, .28); }
+[data-theme="parchment"] .gs-pearl .gold-text   { background: linear-gradient(140deg, #484048 0%, #888090 20%, #686068 35%, #484048 50%, #787080 65%, #585460 80%, #3A3848 100%); background-size: 200% 200%; filter: drop-shadow(0 0 4px rgba(60, 55, 65, .5)); }
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">✦</span>
+    <div>
+      <h1 class="brand-title">Septagram</h1>
+      <p class="brand-sub">Каталог золотых и серебряных стилей</p>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="seg" id="themeSwitch" role="group" aria-label="Фон превью">
+      <button data-theme="dark"      aria-pressed="true">Тёмный</button>
+      <button data-theme="parchment" aria-pressed="false">Пергамент</button>
+      <button data-theme="graphite"  aria-pressed="false">Графит</button>
+    </div>
+    <button class="cbtn" id="motionToggle" aria-pressed="true">
+      <span aria-hidden="true">◐</span> Анимация
+    </button>
+    <button class="cbtn" id="compareToggle" aria-pressed="false">
+      <span aria-hidden="true">▦</span> Сравнить фоны
+    </button>
+  </div>
+</header>
+
+<main class="shell">
+
+  <!-- Catalog -->
+  <section class="catalog" aria-label="Стили">
+    <div class="catalog-head">
+      <input class="search" id="search" type="search" placeholder="Поиск стиля…" aria-label="Поиск стиля">
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="ss-group">
+      <p class="sstitle">Золото · Серебро</p>
+      <div class="sgrid" id="g-gold"></div>
+    </div>
+
+    <div class="ss-group">
+      <p class="sstitle">Новые темы <span class="tag tag-new">6 новых</span></p>
+      <div class="sgrid" id="g-new"></div>
+    </div>
+
+    <div class="ss-group">
+      <p class="sstitle">Для пергамента <span class="tag tag-parch">📜 Чернила · Вермель</span></p>
+      <div class="sgrid" id="g-parch"></div>
+    </div>
+  </section>
+
+  <!-- Stage -->
+  <aside class="stage" aria-label="Превью">
+    <div class="meta">
+      <span class="meta-name" id="metaName">Люкс</span>
+      <span class="meta-en"   id="metaEn">Gradient</span>
+      <span class="meta-use"  id="metaUse"></span>
+    </div>
+
+    <p class="cnote" id="cnote" role="status"></p>
+
+    <div class="txt-field">
+      <span class="txt-label">Текст</span>
+      <input class="txt-input" id="txtInput" value="Кетер · Сефирот" aria-label="Текст для превью">
+    </div>
+
+    <div class="pcard gs-luxe" id="preview">
+      <div class="pblk">
+        <p class="plbl">Типографика</p>
+        <div><span class="h1el gold-text" id="previewHead">Кетер · Сефирот</span></div>
+        <div><span class="h2el gold-text">Корона Древа Жизни</span></div>
+        <div><span class="capel gold-text">✦ Кармический путь · Луна в Рыбах · 7-й день</span></div>
+      </div>
+      <div class="divider"></div>
+      <div class="pblk">
+        <p class="plbl">Иконки</p>
+        <div class="irow">
+          <span class="lic gold-text">✦</span>
+          <span class="lic gold-text">☽</span>
+          <span class="lic gold-text">⊕</span>
+          <span class="lic gold-text">✺</span>
+          <span class="lic gold-text">◉</span>
+          <span class="licsm gold-text">⟡ ✧ ᚱ ∞ ✤ ⬡ ⊗</span>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="pblk">
+        <p class="plbl">Бейджи и чипы</p>
+        <div class="brow">
+          <span class="bdo gold-bdg">PRO</span>
+          <span class="bdo gold-bdg">PLUS</span>
+          <span class="bdf gold-bdf">✦ Карма</span>
+          <span class="bdf gold-bdf">Pro-доступ</span>
+          <span class="bdo gold-bdg">Новый</span>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="pblk">
+        <p class="plbl">CTA-кнопка</p>
+        <button class="btn gold-btn">Открыть расклад ✦</button>
+      </div>
+    </div>
+
+    <div class="compare" id="compare" aria-label="Стиль на разных фонах"></div>
+
+    <div class="cpanel">
+      <div class="chdr">
+        <span class="cttl">CSS — <span id="sname">Luxe Gradient</span></span>
+        <button class="copybtn" id="copybtn">Скопировать</button>
+      </div>
+      <pre class="ccode" id="ccode"></pre>
+    </div>
+  </aside>
+
+</main>
+
+<script>
+"use strict";
+
+/* ============================================================
+   DATA — single source of truth for every style
+   ============================================================ */
+const STYLES = [
+  // Gold & Silver
+  { id:'luxe',     group:'gold',  ru:'Люкс',     en:'Gradient',     icon:'✦', anim:false, use:'Заголовки, премиум-разделы', warn:'parch' },
+  { id:'dust',     group:'gold',  ru:'Порошок',  en:'Dust',         icon:'✦', anim:false, use:'Подписи, вторичный текст' },
+  { id:'paint',    group:'gold',  ru:'Краска',   en:'Paint',        icon:'✦', anim:false, use:'Акцентные заголовки' },
+  { id:'shimmer',  group:'gold',  ru:'Мерцание', en:'Shimmer',      icon:'✦', anim:true,  use:'CTA, активные элементы', warn:'parch' },
+  { id:'glow',     group:'gold',  ru:'Свечение', en:'Glow',         icon:'✦', anim:false, use:'Подсветка избранного', warn:'parch' },
+  { id:'emboss',   group:'gold',  ru:'Рельеф',   en:'Emboss',       icon:'✦', anim:false, use:'Кнопки, печати, медальоны' },
+  { id:'foil',     group:'gold',  ru:'Фольга',   en:'Foil',         icon:'✦', anim:true,  use:'Премиум-бейджи, награды' },
+  { id:'antique',  group:'gold',  ru:'Антик',    en:'Antique',      icon:'✦', anim:false, use:'Архив, старинные свитки' },
+  { id:'chrome',   group:'gold',  ru:'Хром',     en:'Chrome',       icon:'◈', anim:false, use:'Серебряные нейтральные разделы' },
+  { id:'pearl',    group:'gold',  ru:'Жемчуг',   en:'Pearl',        icon:'◈', anim:true,  use:'Деликатные акценты', warn:'parch' },
+
+  // New themes
+  { id:'living',   group:'new',   ru:'Живое ✦',  en:'Living Gold',  icon:'✦', anim:true,  use:'Главные экраны, hero', hint:'Интенсивное' },
+  { id:'fire',     group:'new',   ru:'Огонь',    en:'Sacred Fire',  icon:'🔥', anim:true,  use:'Ритуалы, Колесо года', hint:'Ритуалы' },
+  { id:'amethyst', group:'new',   ru:'Аметист',  en:'Amethyst',     icon:'🔮', anim:true,  use:'Каббала, Оракул', hint:'Каббала · Оракул' },
+  { id:'moon',     group:'new',   ru:'Луна',     en:'Moon Dew',     icon:'🌙', anim:true,  use:'Лунный календарь, Астрология', hint:'Лунный кал.' },
+  { id:'rose',     group:'new',   ru:'Роза',     en:'Rose Gold',    icon:'🌹', anim:false, use:'Венера, Любовь, Таро отношений', hint:'Венера · Любовь' },
+  { id:'verdigris',group:'new',   ru:'Патина',   en:'Verdigris',    icon:'🌿', anim:true,  use:'Природа, Колесо года, Пентакли', hint:'Земля · Природа' },
+
+  // Parchment
+  { id:'ink',      group:'parch', ru:'Чернила',  en:'Ink',          icon:'✒', anim:false, use:'Пергамент — основной текст', hint:'📜 только пергамент', parchOnly:true },
+  { id:'vermeil',  group:'parch', ru:'Вермель',  en:'Vermeil',      icon:'📜', anim:true,  use:'Пергамент — премиум-акцент', hint:'📜 лучше на пергаменте' },
+];
+
+const byId = id => STYLES.find(s => s.id === id);
+
+/* ============================================================
+   CSS SNIPPETS — the copy-paste export for each style
+   ============================================================ */
+const SNIPS = {
+luxe:`/* ✦ Luxe Gradient */
+.gold-text {
+  background: linear-gradient(
+    155deg, #FFE9A0 0%, #E8C76A 25%,
+    #C9A84C 50%, #9B6E2A 75%, #CE9E7A 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}`,
+dust:`/* ✦ Dust — матовая латунь */
+.gold-text {
+  background: linear-gradient(148deg,
+    #CE9E7A 0%, #B8844A 6%, #D0A85A 11%,
+    #C9A84C 17%, #B0783A 22%, #D0A85A 28%,
+    #CE9E7A 35%, #C2944A 42%, #B8844A 48%,
+    #D0A85A 54%, #CE9E7A 61%, #B47840 74%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}`,
+paint:`/* ✦ Paint — масляный мазок */
+.gold-text {
+  background: linear-gradient(145deg,
+    #4A2E0A 0%, #9B6E2A 12%, #FFE9A0 28%,
+    #C9A84C 42%, #6B4B1E 52%, #E8C76A 63%,
+    #9B6E2A 73%, #FFE9A0 82%, #6B4B1E 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}`,
+shimmer:`/* ✦ Shimmer — animated sweep */
+@keyframes shim {
+  from { background-position: -200% center; }
+  to   { background-position:  200% center; }
+}
+.gold-text {
+  background: linear-gradient(90deg,
+    #9B6E2A 0%, #9B6E2A 15%, #C9A84C 25%,
+    #FFE9A0 40%, #FFE9A0 45%, #C9A84C 55%,
+    #9B6E2A 70%, #9B6E2A 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shim 2.5s linear infinite;
+}`,
+glow:`/* ✦ Glow — drop-shadow */
+.gold-text {
+  background: linear-gradient(
+    155deg, #FFE9A0 0%, #C9A84C 40%, #CE9E7A 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter:
+    drop-shadow(0 0 10px rgba(201,168,76,.9))
+    drop-shadow(0 0 28px rgba(201,168,76,.45));
+}`,
+emboss:`/* ✦ Emboss — 3D text-shadow
+   Несовместим с gradient text → solid color */
+.gold-text {
+  color: #C9A84C;
+  text-shadow:
+     0  1px 2px rgba(255,230,120,.70),
+     0 -1px 1px rgba(50,25,0,.95),
+     1px  0 3px rgba(50,25,0,.40),
+    -1px  0 3px rgba(255,220,100,.25),
+     0  3px 6px rgba(0,0,0,.65);
+}`,
+foil:`/* ✦ Foil — animated 300% canvas */
+@keyframes foil {
+  0%,100% { background-position: 0%   50%; }
+  50%      { background-position: 100% 50%; }
+}
+.gold-text {
+  background: linear-gradient(135deg,
+    #9B6E2A 0%, #FFE9A0 15%, #C9A84C 25%,
+    #CE9E7A 35%, #FFE9A0 45%, #9B6E2A 55%,
+    #E8C76A 65%, #CE9E7A 75%, #9B6E2A 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: foil 4s ease-in-out infinite;
+}`,
+antique:`/* ✦ Antique — состаренная латунь */
+.gold-text {
+  background: linear-gradient(155deg,
+    #C8A870 0%, #B8924A 20%, #D4AA68 40%,
+    #A87A38 60%, #C8A464 80%, #B07840 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}`,
+chrome:`/* ◈ Chrome — серебро-хром */
+.gold-text {
+  background: linear-gradient(155deg,
+    #FFF 0%, #D8D8D8 15%, #808080 30%,
+    #E0E0E0 45%, #F8F8F8 55%, #A0A0A0 70%,
+    #D8D8D8 85%, #FFF 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}`,
+pearl:`/* ◈ Pearl — жемчуг */
+@keyframes pearl {
+  0%,100% { background-position: 0%   50%; }
+  50%      { background-position: 100% 50%; }
+}
+.gold-text {
+  background: linear-gradient(140deg,
+    #FFF 0%, #EDE8E3 20%, #C8C4BE 35%,
+    #FFF 50%, #E8E4E0 65%, #D0CCC8 80%,
+    #FFF 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: pearl 5s ease-in-out infinite;
+  filter: drop-shadow(0 0 5px rgba(255,255,255,.35));
+}`,
+living:`/* ✦ Living Gold — живое золото (diagonal 400%) */
+@keyframes liveGold {
+  0%   { background-position: 0%   0%; }
+  33%  { background-position: 100% 0%; }
+  66%  { background-position: 100% 100%; }
+  100% { background-position: 0%   0%; }
+}
+.gold-text {
+  background: linear-gradient(135deg,
+    #4A2E0A 0%, #C9A84C 8%,  #FFE9A0 17%,
+    #E8C76A 25%, #6B4B1E 33%, #FFE9A0 42%,
+    #9B6E2A 50%, #C9A84C 58%, #FFE9A0 67%,
+    #9B6E2A 75%, #4A2E0A 83%, #E8C76A 92%,
+    #4A2E0A 100%
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: liveGold 8s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(201,168,76,.7));
+}`,
+fire:`/* 🔥 Sacred Fire — для раздела Ритуалы */
+@keyframes fireFlicker {
+  0%,100% { background-position: 0%   0%; }
+  40%     { background-position: 100% 50%; }
+  70%     { background-position: 50% 100%; }
+}
+.gold-text {
+  background: linear-gradient(155deg,
+    #3A0E02 0%, #8B3010 18%, #CC5814 32%,
+    #E87A20 45%, #C9A84C 58%, #E87A20 70%,
+    #CC5814 80%, #6B2208 95%, #3A0E02 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fireFlicker 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(220,100,20,.75));
+}`,
+amethyst:`/* 🔮 Amethyst — для Каббала · Оракул */
+@keyframes amePulse {
+  0%,100% { background-position: 0%   50%; }
+  50%     { background-position: 100% 50%; }
+}
+.gold-text {
+  background: linear-gradient(135deg,
+    #28085A 0%, #5828A8 18%, #9060C0 30%,
+    #C9A84C 42%, #7840B0 55%, #B068D0 68%,
+    #C9A84C 78%, #481898 88%, #1A0438 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: amePulse 5s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(140,60,200,.6));
+}`,
+moon:`/* 🌙 Moon Dew — для Луна · Астрология */
+@keyframes moonFlow {
+  0%,100% { background-position: 0%   50%; }
+  50%     { background-position: 100% 50%; }
+}
+.gold-text {
+  background: linear-gradient(155deg,
+    #5870A0 0%, #98B8D8 18%, #C8E0F4 32%,
+    #80A0C8 48%, #B0D0EC 62%, #90B0D0 78%,
+    #607898 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: moonFlow 7s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(150,190,230,.55));
+}`,
+rose:`/* 🌹 Rose Gold — розовое золото */
+.gold-text {
+  background: linear-gradient(155deg,
+    #FFE2D8 0%, #F2BCA8 20%, #DE9580 40%,
+    #E8B488 56%, #CC7E68 78%, #F4C6B4 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}`,
+verdigris:`/* 🌿 Verdigris — патина (Природа · Пентакли) */
+@keyframes patina {
+  0%,100% { background-position: 0%   50%; }
+  50%     { background-position: 100% 50%; }
+}
+.gold-text {
+  background: linear-gradient(155deg,
+    #173A2A 0%, #2E6B4A 18%, #5AA078 32%,
+    #C9A84C 45%, #4A9472 58%, #8AC8A2 72%,
+    #2E6B4A 88%, #123022 100%
+  );
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: patina 7s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(70,150,110,.5));
+}`,
+ink:`/* ✒ Ink — чернила (для пергамента) */
+.gold-text {
+  background: linear-gradient(155deg,
+    #0E0702 0%, #281208 22%, #120803 40%,
+    #201008 60%, #0E0702 78%, #1A0A05 95%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gold-btn {
+  background: linear-gradient(
+    135deg, #0E0702, #281208 50%, #0E0702
+  );
+  color: #F2E8D5;
+  border: 1px solid rgba(40,18,8,.5);
+}`,
+vermeil:`/* 📜 Вермель — вино+золото (пергамент) */
+@keyframes vermeil {
+  0%,100% { background-position: 0%   50%; }
+  50%     { background-position: 100% 50%; }
+}
+.gold-text {
+  background: linear-gradient(135deg,
+    #5A1008 0%, #C02020 18%, #E09030 32%,
+    #C9A84C 45%, #E09030 58%, #A81818 72%,
+    #FFD870 82%, #881010 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: vermeil 6s ease-in-out infinite;
+}`
+};
+
+/* ============================================================
+   STATE — persisted in localStorage
+   ============================================================ */
+const STORE = 'septagram.v3';
+const state = Object.assign(
+  { theme:'dark', motion:'on', style:'luxe', text:'Кетер · Сефирот', compare:false },
+  load()
+);
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(STORE)) || {}; }
+  catch { return {}; }
+}
+function save() {
+  try { localStorage.setItem(STORE, JSON.stringify(state)); } catch {}
+}
+
+/* ============================================================
+   DOM
+   ============================================================ */
+const $ = sel => document.querySelector(sel);
+const root      = document.documentElement;
+const preview   = $('#preview');
+const cnote     = $('#cnote');
+let   cards      = [];   // ordered list of all card elements
+
+/* ---------- Build the catalog ---------- */
+function makeCard(s) {
+  const el = document.createElement('div');
+  el.className = 'scard' + (s.group === 'parch' ? ' pt' : '');
+  el.dataset.id = s.id;
+  el.setAttribute('role', 'button');
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('aria-pressed', 'false');
+  el.setAttribute('aria-label', `${s.ru} — ${s.en}`);
+  el.innerHTML =
+    `<div class="sprev gs-${s.id}"><span class="gold-text">${s.icon}</span></div>` +
+    `<div class="sname">${s.ru}</div>` +
+    `<div class="ssub">${s.en}</div>` +
+    (s.hint ? `<div class="shint">${s.hint}</div>` : '') +
+    (s.anim ? `<div class="atag" title="Анимированный"></div>` : '');
+
+  el.addEventListener('click', () => select(s.id));
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(s.id); }
+    else handleArrow(e, el);
+  });
+  return el;
+}
+
+function buildGrid(targetId, group) {
+  const grid = $(targetId);
+  STYLES.filter(s => s.group === group).forEach(s => grid.appendChild(makeCard(s)));
+}
+
+buildGrid('#g-gold',  'gold');
+buildGrid('#g-new',   'new');
+buildGrid('#g-parch', 'parch');
+cards = [...document.querySelectorAll('.scard')];
+
+/* ---------- Build the comparison cards (one per background) ---------- */
+const CMP_THEMES = [['dark', 'Тёмный'], ['parchment', 'Пергамент'], ['graphite', 'Графит']];
+const compareEl = $('#compare');
+compareEl.innerHTML = CMP_THEMES.map(([t, label]) => `
+  <div class="cmp-card gs-luxe" data-theme="${t}">
+    <span class="cmp-tag">${label}</span>
+    <div class="cmp-head h2el gold-text"></div>
+    <div class="cmp-icons">
+      <span class="lic gold-text">✦</span>
+      <span class="lic gold-text">☽</span>
+      <span class="lic gold-text">◉</span>
+    </div>
+    <div><span class="bdf gold-bdf">✦ Карма</span></div>
+    <button class="btn gold-btn">Открыть ✦</button>
+  </div>`).join('');
+const cmpCards = [...compareEl.querySelectorAll('.cmp-card')];
+const cmpHeads = [...compareEl.querySelectorAll('.cmp-head')];
+
+/* ---------- Keyboard grid navigation ---------- */
+function handleArrow(e, el) {
+  const visible = cards.filter(c => !c.classList.contains('hidden'));
+  const i = visible.indexOf(el);
+  if (i < 0) return;
+  let next = null;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = visible[i + 1];
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   next = visible[i - 1];
+  if (next) { e.preventDefault(); next.focus(); select(next.dataset.id); }
+}
+
+/* ============================================================
+   APPLY A STYLE
+   ============================================================ */
+function select(id) {
+  const s = byId(id);
+  if (!s) return;
+  state.style = id;
+
+  // Swap the gs-* class on the preview (and every comparison card), keep the rest
+  preview.className = preview.className.replace(/\bgs-\S+/g, '').trim() + ' gs-' + id;
+  cmpCards.forEach(c => { c.className = c.className.replace(/\bgs-\S+/g, '').trim() + ' gs-' + id; });
+
+  // Card selected state
+  cards.forEach(c => {
+    const on = c.dataset.id === id;
+    c.classList.toggle('on', on);
+    c.setAttribute('aria-pressed', String(on));
+  });
+
+  // Meta + code panel
+  $('#metaName').textContent = s.ru;
+  $('#metaEn').textContent   = s.en;
+  $('#metaUse').textContent  = s.use;
+  $('#sname').textContent    = `${s.ru} · ${s.en}`;
+  $('#ccode').textContent    = SNIPS[id] || '';
+
+  updateNote(s);
+  save();
+}
+
+/* ---------- Contrast guidance ---------- */
+function updateNote(s) {
+  const parch = state.theme === 'parchment';
+  let msg = '';
+  if (s.parchOnly && !parch) {
+    msg = '📜 Включи фон «Пергамент» — этот стиль рассчитан на светлый фон.';
+  } else if (s.warn === 'parch' && parch) {
+    msg = '⚠ Скорректировано для пергамента: яркие highlights заменены тёмными.';
+  }
+  cnote.textContent = msg;
+  cnote.classList.toggle('show', Boolean(msg));
+}
+
+/* ============================================================
+   THEME / MOTION / SEARCH / TEXT / COPY
+   ============================================================ */
+function setTheme(theme) {
+  state.theme = theme;
+  root.dataset.theme = theme;
+  document.querySelectorAll('#themeSwitch button').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.dataset.theme === theme))
+  );
+  updateNote(byId(state.style));
+  save();
+}
+
+function setMotion(on) {
+  state.motion = on ? 'on' : 'off';
+  root.dataset.motion = state.motion;
+  const btn = $('#motionToggle');
+  btn.setAttribute('aria-pressed', String(on));
+  save();
+}
+
+function setCompare(on) {
+  state.compare = on;
+  $('#preview').classList.toggle('is-hidden', on);
+  compareEl.classList.toggle('show', on);
+  $('#compareToggle').setAttribute('aria-pressed', String(on));
+  save();
+}
+
+function setText(value) {
+  state.text = value || ' ';
+  $('#previewHead').textContent = state.text;
+  cmpHeads.forEach(h => { h.textContent = state.text; });
+  save();
+}
+
+function filter(query) {
+  const q = query.trim().toLowerCase();
+  let shown = 0;
+  cards.forEach(c => {
+    const s = byId(c.dataset.id);
+    const hit = !q || s.ru.toLowerCase().includes(q) || s.en.toLowerCase().includes(q) || s.use.toLowerCase().includes(q);
+    c.classList.toggle('hidden', !hit);
+    if (hit) shown++;
+  });
+  $('#count').textContent = q ? `${shown} из ${cards.length}` : `${cards.length} стилей`;
+}
+
+$('#themeSwitch').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (b) setTheme(b.dataset.theme);
+});
+
+$('#motionToggle').addEventListener('click', () => setMotion(state.motion === 'off'));
+
+$('#compareToggle').addEventListener('click', () => setCompare(!state.compare));
+
+$('#search').addEventListener('input', e => filter(e.target.value));
+
+$('#txtInput').addEventListener('input', e => setText(e.target.value));
+
+$('#copybtn').addEventListener('click', async () => {
+  const code = $('#ccode').textContent;
+  const btn = $('#copybtn');
+  try {
+    await navigator.clipboard.writeText(code);
+    btn.textContent = 'Скопировано ✓';
+  } catch {
+    btn.textContent = 'Не удалось';
+  }
+  setTimeout(() => { btn.textContent = 'Скопировать'; }, 2000);
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+(function init() {
+  // Default motion to the user's OS preference unless they chose before
+  if (!('motion' in load()) && window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    state.motion = 'off';
+  }
+  setTheme(state.theme);
+  setMotion(state.motion === 'on');
+  $('#txtInput').value = state.text;
+  setText(state.text);
+  filter('');
+  select(byId(state.style) ? state.style : 'luxe');
+  setCompare(state.compare === true);
+})();
+</script>
+</body>
+</html>
